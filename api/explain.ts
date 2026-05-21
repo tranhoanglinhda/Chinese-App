@@ -1,10 +1,5 @@
 import { GoogleGenAI } from "@google/genai";
 
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || "",
-  httpOptions: { headers: { "User-Agent": "aistudio-build" } },
-});
-
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
@@ -21,13 +16,14 @@ export default async function handler(req: any, res: any) {
   Trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu.`;
 
   try {
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
     const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
+      model: "gemini-1.5-flash",
       contents: prompt,
     });
     res.json({ explanation: response.text });
   } catch (error: any) {
-    console.error("Gemini Error:", error);
-    res.status(500).json({ error: "Failed to fetch explanation from AI" });
+    console.error("Gemini Error:", error?.message || error);
+    res.status(500).json({ error: error?.message || "Failed to fetch explanation from AI" });
   }
 }
