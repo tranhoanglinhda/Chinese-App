@@ -252,16 +252,15 @@ export const topics: Topic[] = [
       {
         id: 22,
         scrambled: [
-          { id: "22-1", text: "是" },
+          { id: "22-1", text: "这是" },
           { id: "22-2", text: "文章" },
-          { id: "22-3", text: "这是一一" },
-          { id: "22-4", text: "篇" },
+          { id: "22-3", text: "乱七八糟的" },
+          { id: "22-4", text: "一篇" },
           { id: "22-5", text: "刚写完的" },
-          { id: "22-6", text: "乱七八糟的" }
-        ],
-        correctIds: ["22-3", "22-4", "22-5", "22-6", "22-2"],
+               ],
+        correctIds: ["22-1", "22-4", "22-5", "22-3", "22-2"],
         alternativeCorrectIds: [
-          ["22-3", "22-5", "22-6", "22-4", "22-2"]
+          ["22-1", "22-5", "22-3", "22-4", "22-2"]
         ],
         translation: "Đây là một bài văn lộn xộn vừa viết xong.",
         explanation: "Câu này có thể để '一篇' ở trước hoặc sau định ngữ miêu tả."
