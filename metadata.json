@@ -1,0 +1,6 @@
+{
+  "name": "Ngữ pháp tiếng Trung ĐHNN-DHĐN",
+  "description": "Hệ thống luyện tập ngữ pháp tiếng Trung dành cho sinh viên ĐHNN-ĐHĐN.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
