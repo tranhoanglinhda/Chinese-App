@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
@@ -16,14 +16,14 @@ export default async function handler(req: any, res: any) {
   Trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu.`;
 
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
-    const response = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: prompt,
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: prompt }],
     });
-    res.json({ explanation: response.text });
+    res.json({ explanation: completion.choices[0].message.content });
   } catch (error: any) {
-    console.error("Gemini Error:", error?.message || error);
+    console.error("OpenAI Error:", error?.message || error);
     res.status(500).json({ error: error?.message || "Failed to fetch explanation from AI" });
   }
 }

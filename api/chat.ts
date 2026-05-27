@@ -1,4 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 
 export default async function handler(req: any, res: any) {
   if (req.method !== "POST") {
@@ -11,14 +11,14 @@ export default async function handler(req: any, res: any) {
   }
 
   try {
-    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
-    const result = await ai.models.generateContent({
-      model: "gemini-2.0-flash",
-      contents: [{ role: "user", parts: [{ text: message }] }],
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY || "" });
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: message }],
     });
-    res.json({ reply: result.text });
+    res.json({ reply: completion.choices[0].message.content });
   } catch (error: any) {
-    console.error("Gemini Error:", error?.message || error);
+    console.error("OpenAI Error:", error?.message || error);
     res.status(500).json({ error: error?.message || "Failed to fetch response from AI" });
   }
 }
