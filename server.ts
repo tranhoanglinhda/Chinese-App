@@ -1,7 +1,7 @@
 import express from "express";
 import path from "path";
 import { createServer as createViteServer } from "vite";
-import { GoogleGenAI } from "@google/genai";
+import OpenAI from "openai";
 import dotenv from "dotenv";
 
 dotenv.config();
@@ -11,14 +11,9 @@ const PORT = 3000;
 
 app.use(express.json());
 
-// Initialize Gemini
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || "",
-  httpOptions: {
-    headers: {
-      "User-Agent": "aistudio-build",
-    },
-  },
+// Initialize OpenAI
+const openai = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY || "",
 });
 
 // API Routes
@@ -29,15 +24,15 @@ app.post("/api/chat", async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const result = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: [{ role: "user", parts: [{ text: message }] }],
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o",
+      messages: [{ role: "user", content: message }],
     });
-    const text = result.text;
 
+    const text = completion.choices[0].message.content;
     res.json({ reply: text });
   } catch (error: any) {
-    console.error("Gemini Error:", error);
+    console.error("OpenAI Error:", error);
     res.status(500).json({ error: "Failed to fetch response from AI" });
   }
 });
@@ -54,14 +49,14 @@ app.post("/api/explain", async (req, res) => {
     Hãy giải thích tại sao thứ tự này là đúng dựa trên các quy tắc: Sở hữu + Số lượng + Trạng thái + Màu sắc/Chất liệu + Danh từ.
     Trả lời bằng tiếng Việt, ngắn gọn, dễ hiểu.`;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-3-flash-preview",
-      contents: prompt,
+    const completion = await openai.chat.completions.create({
+      model: "gpt-4o-mini",
+      messages: [{ role: "user", content: prompt }],
     });
 
-    res.json({ explanation: response.text });
+    res.json({ explanation: completion.choices[0].message.content });
   } catch (error: any) {
-    console.error("Gemini Error:", error);
+    console.error("OpenAI Error:", error);
     res.status(500).json({ error: "Failed to fetch explanation from AI" });
   }
 });
